@@ -72,6 +72,8 @@ class PostScheduler:
             times.append(post_time)
 
         times.sort()
+        # 既に過ぎた時刻を除外（サービス再起動時対応）
+        times = [t for t in times if t > now_local]
         self.schedules[account_id] = times
 
         logger.info(
