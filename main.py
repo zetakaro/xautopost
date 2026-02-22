@@ -18,6 +18,9 @@ from src.publisher import Publisher
 # .envファイル読み込み
 load_dotenv()
 
+# ロガー初期化
+logger = setup_logger(os.getenv("LOG_LEVEL", "INFO"))
+
 
 def load_config() -> dict:
     """設定ファイル読み込み"""
@@ -71,6 +74,10 @@ def run_once(config: dict, generator: TweetGenerator,
             if result["is_thread"]:
                 for i, t in enumerate(result["thread_texts"]):
                     logger.info(f"  スレッド {i+1}: {t}")
+            history.add(
+                account_id, result["text"],
+                "dry-run", result["category"]
+            )
             continue
 
         # 投稿
@@ -106,26 +113,31 @@ def run_scheduler(config: dict, generator: TweetGenerator,
     logger.info(f"ドライラン: {'ON' if dry_run else 'OFF'}")
     logger.info("=" * 50)
 
+    # 各アカウントのローカル日付を記録
+    last_schedule_dates: dict[str, object] = {}
+
     # 初回スケジュール生成
     for account_id, acc_config in config["accounts"].items():
+        tz = ZoneInfo(acc_config["schedule"]["timezone"])
         scheduler.generate_daily_schedule(
             account_id, acc_config["schedule"]
         )
-
-    last_schedule_date = datetime.now().date()
+        last_schedule_dates[account_id] = datetime.now(tz).date()
 
     try:
         while True:
-            now = datetime.now()
-
-            # 日付が変わったらスケジュール再生成
-            if now.date() != last_schedule_date:
-                logger.info("--- 日次スケジュール再生成 ---")
-                for account_id, acc_config in config["accounts"].items():
+            # 各アカウントのローカル日付が変わったらスケジュール再生成
+            for account_id, acc_config in config["accounts"].items():
+                tz = ZoneInfo(acc_config["schedule"]["timezone"])
+                local_date = datetime.now(tz).date()
+                if local_date != last_schedule_dates.get(account_id):
+                    logger.info(
+                        f"--- [{account_id}] 日次スケジュール再生成 ---"
+                    )
                     scheduler.generate_daily_schedule(
                         account_id, acc_config["schedule"]
                     )
-                last_schedule_date = now.date()
+                    last_schedule_dates[account_id] = local_date
 
             # 各アカウントの投稿チェック
             for account_id, acc_config in config["accounts"].items():
@@ -215,8 +227,8 @@ def main():
         sys.exit(1)
 
     # コンポーネント初期化
-    generator = TweetGenerator(api_key=anthropic_key)
     history = PostHistory()
+    generator = TweetGenerator(api_key=anthropic_key, history=history)
     publishers = create_publishers(config)
 
     # --verify: 認証チェックのみ
@@ -254,6 +266,4 @@ def main():
 
 
 if __name__ == "__main__":
-    log_level = os.getenv("LOG_LEVEL", "INFO")
-    logger = setup_logger(log_level)
     main()

@@ -8,9 +8,9 @@ from src.logger import PostHistory
 class TweetGenerator:
     """Claude APIを使ったツイート生成"""
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, history: PostHistory = None):
         self.client = Anthropic(api_key=api_key)
-        self.history = PostHistory()
+        self.history = history or PostHistory()
 
     def _select_category(self, categories: list) -> dict:
         """重み付きランダムでカテゴリを選択"""
@@ -40,7 +40,7 @@ class TweetGenerator:
             recent_context = (
                 "\n\n<recent_posts>\n"
                 "以下はこのアカウントの直近の投稿です。内容が重複しないようにしてください:\n"
-                + "\n".join(f"- {t}" for t in recent_texts[-10:])
+                + "\n".join(f"- {t}" for t in recent_texts)
                 + "\n</recent_posts>"
             )
 

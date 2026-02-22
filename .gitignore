@@ -1,0 +1,18 @@
+# 環境変数（APIキー含む）
+.env
+
+# アカウント設定（APIキー含む）
+config/accounts.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+
+# ログファイル（.gitkeepは残す）
+logs/*.log
+logs/*.json
+
+# OS
+.DS_Store
+Thumbs.db
