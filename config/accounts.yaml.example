@@ -1,0 +1,107 @@
+# X Auto Poster - アカウント設定
+# このファイルをコピーして accounts.yaml として使用してください
+
+accounts:
+  # --- 英語アカウント ---
+  english:
+    name: "English Account"
+    language: "en"
+
+    # X API認証情報
+    api_key: "YOUR_API_KEY_HERE"
+    api_secret: "YOUR_API_SECRET_HERE"
+    access_token: "YOUR_ACCESS_TOKEN_HERE"
+    access_token_secret: "YOUR_ACCESS_TOKEN_SECRET_HERE"
+
+    # 投稿スケジュール
+    schedule:
+      posts_per_day: 4          # 1日の投稿数（3〜5）
+      timezone: "US/Eastern"     # 米国東部時間
+      core_hours_start: 8       # コアタイム開始（8:00 AM EST）
+      core_hours_end: 22        # コアタイム終了（10:00 PM EST）
+      min_interval_hours: 2     # 最低投稿間隔（時間）
+
+    # ツイート生成ルール
+    content:
+      # アカウントのペルソナ/テーマ
+      persona: |
+        You are a tech entrepreneur sharing insights about AI, 
+        automation, and the future of work. Your tone is thoughtful, 
+        practical, and slightly contrarian. You share real experiences 
+        and actionable advice, not hype.
+      
+      # ツイートのカテゴリ（ランダムに選択）
+      categories:
+        - topic: "AI automation tips"
+          weight: 30
+          description: "Practical tips for using AI agents in business"
+        - topic: "Future of work insights"
+          weight: 25
+          description: "Observations about how work is changing"
+        - topic: "Productivity hacks"
+          weight: 20
+          description: "Personal productivity methods and tools"
+        - topic: "Industry trends"
+          weight: 15
+          description: "Interesting trends in tech and business"
+        - topic: "Motivational / Mindset"
+          weight: 10
+          description: "Encouragement and mindset shifts for entrepreneurs"
+
+      # 投稿スタイル設定
+      style:
+        max_characters: 280
+        use_hashtags: true
+        max_hashtags: 2
+        use_emojis: false
+        thread_probability: 0.1  # 10%の確率でスレッド投稿
+
+  # --- 日本語アカウント ---
+  japanese:
+    name: "日本語アカウント"
+    language: "ja"
+
+    # X API認証情報
+    api_key: "YOUR_API_KEY_HERE"
+    api_secret: "YOUR_API_SECRET_HERE"
+    access_token: "YOUR_ACCESS_TOKEN_HERE"
+    access_token_secret: "YOUR_ACCESS_TOKEN_SECRET_HERE"
+
+    # 投稿スケジュール
+    schedule:
+      posts_per_day: 4
+      timezone: "Asia/Tokyo"
+      core_hours_start: 7       # コアタイム開始（7:00 JST）
+      core_hours_end: 23        # コアタイム終了（23:00 JST）
+      min_interval_hours: 2
+
+    # ツイート生成ルール
+    content:
+      persona: |
+        あなたはDX推進・業務改善の専門家です。電力小売業界での実務経験を持ち、
+        AI活用・業務自動化・チームマネジメントについて発信しています。
+        トーンは実践的で、現場目線。理論だけでなく「明日から使える」情報を重視します。
+      
+      categories:
+        - topic: "AI・DX活用術"
+          weight: 30
+          description: "業務でのAI活用、自動化の具体例やTips"
+        - topic: "マネジメント・リーダーシップ"
+          weight: 25
+          description: "チーム運営、次世代管理職育成の知見"
+        - topic: "業務改善・効率化"
+          weight: 20
+          description: "バックオフィス業務の改善手法"
+        - topic: "業界トレンド"
+          weight: 15
+          description: "電力・エネルギー業界やIT業界の動向"
+        - topic: "自己啓発・学び"
+          weight: 10
+          description: "ビジネスパーソンの成長に関する気づき"
+
+      style:
+        max_characters: 280
+        use_hashtags: true
+        max_hashtags: 2
+        use_emojis: false
+        thread_probability: 0.1

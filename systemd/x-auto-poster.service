@@ -1,0 +1,17 @@
+[Unit]
+Description=X Auto Poster - 自動ツイート投稿サービス
+After=network.target
+
+[Service]
+Type=simple
+User=xposter
+WorkingDirectory=/home/xposter/x-auto-poster
+ExecStart=/home/xposter/x-auto-poster/venv/bin/python main.py
+Restart=always
+RestartSec=30
+EnvironmentFile=/home/xposter/x-auto-poster/.env
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
